@@ -1,9 +1,14 @@
 PREFIX     : <http://www.mysparql.com/resource/northwind/>
 
-SELECT ?customer
-WHERE { GRAPH :dataGraph {
-  ?customer :boughtProduct ?product .
-   FILTER (?product = :product-61)
- }
+SELECT # The rule already did the DISTINCT for you.
+  ?customer 
+  ?companyName 
+  ?contactName
+WHERE { 
+  GRAPH :dataGraph {
+    ?customer :boughtProduct :product-61 ;
+              :companyName ?companyName ;
+              :contactName ?contactName .
+  }
 }
 ORDER BY ?customer
