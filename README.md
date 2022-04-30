@@ -4,6 +4,9 @@
 
 This repository will spin a RDFox server with the Northwind data store. 
 You will need to have Docker running on your local machine. Please visit the official Docker web site to download and install Docker. 
+For detailed information on the Northwind sample data store, please refer to the following article:
+https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
+
 
 ## License
 
@@ -42,6 +45,8 @@ TODO: Document queries and diagrams here
 To add each rule, execute the following in the command line after replacing the name of the rule:
 
 ` curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" --user admin:admin -H "Content-Type:" -T "rules/<name-of-the-rule>.dlog" "localhost:12110/datastores/Northwind/content" `
+
+TODO: What the user need to install on each OS to be able to run curl?
 
 ## Cleanning up the local environment
 This following command will stop and remove all containers, remove all images, and delete all Volumes. 
