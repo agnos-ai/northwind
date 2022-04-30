@@ -1,0 +1,10 @@
+PREFIX     : <http://www.mysparql.com/resource/northwind/>
+
+SELECT 
+    (COUNT (1) AS ?Count) 
+    ?graph
+WHERE {
+    GRAPH ?graph {
+        :product-2 ^:hasProduct/:belongsToOrder/:hasCustomer/^(^:hasProduct/:belongsToOrder/:hasCustomer) :product-61
+    }
+}

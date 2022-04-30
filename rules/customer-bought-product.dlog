@@ -1,5 +1,7 @@
 PREFIX : <http://www.mysparql.com/resource/northwind/>
 
+# WARNING!!! Careful to use this rule in aggregations, as it only adds one triple for customers that bought the same product multiple times.
+
 [?customer, :boughtProduct, ?product] :-
     [?orderDetail, :hasProduct, ?product],
     [?orderDetail, :belongsToOrder, ?order],

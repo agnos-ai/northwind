@@ -1,0 +1,19 @@
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+SELECT  
+  ?customer 
+  ?companyName 
+  ?contactName
+  (COUNT(?product) as ?count)
+WHERE { 
+  GRAPH :dataGraph {
+    ?orderDetail :hasProduct ?product ; 
+                 :belongsToOrder ?order .
+    ?order       :hasCustomer ?customer .
+    ?customer	   :companyName ?companyName ;
+                 :contactName ?contactName .
+  }
+}
+GROUP BY ?customer ?companyName ?contactName
+ORDER BY DESC(?count)
+LIMIT 5

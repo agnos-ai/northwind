@@ -1,0 +1,10 @@
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+[?customer, :hasProductCount, ?productCount] :-
+AGGREGATE (
+    [?orderDetail, :hasProduct, ?product],
+    [?orderDetail, :belongsToOrder, ?order],
+    [?order, :hasCustomer, ?customer] 
+    ON ?customer 
+    BIND COUNT(?product) AS ?productCount
+) .

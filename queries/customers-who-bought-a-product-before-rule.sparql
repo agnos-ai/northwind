@@ -1,6 +1,6 @@
 PREFIX     : <http://www.mysparql.com/resource/northwind/>
 
-SELECT DISTINCT 
+SELECT DISTINCT # eliminates duplicates in case the same customer bought a product more than once
   ?customer 
   ?companyName 
   ?contactName
@@ -14,3 +14,16 @@ WHERE {
   }
 }
 ORDER BY ?customer
+
+
+
+
+# The following is the property path version of the query above
+
+SELECT DISTINCT ?customer 
+WHERE { GRAPH ?graph {
+    :product-61 ^:hasProduct/:belongsToOrder/:hasCustomer ?customer .
+  }
+}
+ORDER BY ?product
+
