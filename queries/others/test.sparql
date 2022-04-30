@@ -1,0 +1,64 @@
+PREFIX ub: <http://swat.cse.lehigh.edu/onto/univ-bench.owl#>
+
+SELECT ?S ?P ?O ?G 
+WHERE { 
+    { 
+        SELECT * { GRAPH ?G {
+                ?S ?P ?O
+            } 
+            FILTER(?G = ub:data)
+        }
+        LIMIT 5
+    }
+    UNION
+    {
+        SELECT * { GRAPH ?G {
+                ?S ?P ?O
+            }     
+            FILTER(?G = ub:ontology)
+        }
+        LIMIT 5
+    }
+}
+
+
+# Queries for boughtProduct.dlog
+
+ PREFIX     : <http://www.mysparql.com/resource/northwind/>
+ PREFIX  rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+ PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT  DISTINCT ?customer
+WHERE { GRAPH :dataGraph {
+  ?orderDetail :hasProduct ?product ; 
+               :belongsToOrder ?order .
+  ?order       :hasCustomer ?customer .
+  FILTER (?product = :product-61)
+  }
+}
+ORDER BY ?customer
+
+
+
+ PREFIX     : <http://www.mysparql.com/resource/northwind/>
+ PREFIX  rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+ PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?customer
+WHERE { GRAPH :dataGraph {
+  ?customer :boughtProduct ?product .
+   FILTER (?product = :product-61)
+ }
+}
+ORDER BY ?customer
+  
+     
+
+
+
+
+

@@ -1,0 +1,353 @@
+
+
+# Named Graphs
+
+
+# Populate the Graphs
+# Note that the some of the books are added to more than one graph for demonstration purposes.
+# Execute each of the following statements individually. 
+PREFIX ns: <http://mysparql.ai/ns#>
+INSERT DATA {
+  GRAPH ns:graph1 {
+    ns:book1  ns:price  10 .
+  }
+}
+
+PREFIX ns: <http://mysparql.ai/ns#>
+INSERT DATA {
+  GRAPH ns:graph2 {
+    ns:book1  ns:price  10 .
+    ns:book2  ns:price  20 .
+  }
+}
+
+PREFIX ns: <http://mysparql.ai/ns#>
+INSERT DATA {
+  GRAPH ns:graph3 {
+    ns:book1  ns:price  10 .
+    ns:book2  ns:price  20 .
+    ns:book3  ns:price  30 .
+  }
+}
+
+
+# Union all graphs in FROM
+# The result set includes duplicates and doesn't show the graph IRI.
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+FROM ns:graph1 
+FROM ns:graph2
+FROM ns:graph3
+WHERE {?s ?p ?o}
+
+
+# Union all graphs in FROM NAMED
+# The result set includes duplicates and shows the graph IRI. 
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+FROM NAMED ns:graph1 
+FROM NAMED ns:graph2
+FROM NAMED ns:graph3
+WHERE {GRAPH ?g {?s ?p ?o}} 
+ORDER BY ?g ?o
+
+
+# This query returns a default graph as union of graphs referenced in the FROM clause.
+# It completely ignores the named graph!!!
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+FROM ns:graph1 
+FROM ns:graph2
+FROM NAMED ns:graph3
+WHERE {?s ?p ?o}
+
+
+# This query returns the IRI and Graph pairs of graphs referenced in FROM NAMED clause.
+# It ignores the default graph!
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+FROM ns:graph1 
+FROM ns:graph2
+FROM NAMED ns:graph3
+WHERE {GRAPH ?g {?s ?p ?o}} 
+
+
+# This query only returns the triples that match the patterns in both graphs
+# Only book1 and book2 can be found on both graps 2 and 3.
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+WHERE {
+  GRAPH ns:graph2 {?s ?p ?o}
+  GRAPH ns:graph3 {?s ?p ?o}
+}
+
+
+# This query only returns the triples that match the patterns in all the graphs mentioned in the query.
+# Only book1 can be found in all 3 graphs.
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+WHERE {
+  GRAPH ns:graph1 {?s ?p ?o}
+  GRAPH ns:graph2 {?s ?p ?o}
+  GRAPH ns:graph3 {?s ?p ?o}
+}
+
+# Restricting by Graph IRI
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+WHERE {
+     GRAPH ns:graph2 {?s ?p ?o}
+     GRAPH ns:graph3 {?s ?p ?o}
+}
+
+
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+WHERE {
+     GRAPH ns:graph1 {?s ?p ?o}
+     GRAPH ns:graph2 {?s ?p ?o}
+     GRAPH ns:graph3 {?s ?p ?o}
+}
+
+
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+WHERE {
+{
+     GRAPH ?g {?s ?p ?o}
+}
+}
+ORDER BY ?g ?s
+
+
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+WHERE {
+{
+     GRAPH ?g {?s ?p ?o}
+}
+FILTER (?g IN (ns:graph2 , ns:graph3))
+}
+ORDER BY ?g ?s
+
+
+# produces the same result as the query above
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+FROM NAMED ns:graph2
+FROM NAMED ns:graph3
+WHERE {
+     GRAPH ?g {?s ?p ?o}
+}
+ORDER BY ?g ?s
+
+
+
+# Union triples from all graphs referenced in the query
+# The result set includes duplicates, use DISTINCT to remove them.
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT *
+WHERE {
+  {GRAPH ns:graph1 {?s ?p ?o}}
+   UNION
+  {GRAPH ns:graph2 {?s ?p ?o}}
+   UNION
+  {GRAPH ns:graph3 {?s ?p ?o}}
+}
+
+
+# Union graphs 1 and 2 and join on graph 3
+# Note that triples from graphs 1 and 2 becomes part of the default graph. 
+# The query returns triples that match the patterns in the default and named graphs.
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT ?g ?s ?p ?o
+  FROM ns:graph1 
+  FROM ns:graph2
+  FROM NAMED ns:graph3
+WHERE {
+  {?s ?p ?o} # default graph
+  {GRAPH ?g {?s ?p ?o}} # named graph
+}
+ORDER BY ?g ?o
+
+
+# Union all the graphs
+# Note that triples from graphs 1 and 2 becomes part of the default graph. 
+# Use DISTINCT to remove duplicates.
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT ?g ?s ?p ?o
+  FROM ns:graph1 
+  FROM ns:graph2
+  FROM NAMED ns:graph3
+WHERE {
+  {?s ?p ?o} 
+   UNION
+  {GRAPH ?g {?s ?p ?o}} 
+}
+ORDER BY ?g ?o
+
+
+# Counting triples in named graph
+# This query returns the counts only for the named graphs listed in the FROM NAMED clause. 
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT ?g (count(*) as ?size) 
+FROM NAMED ns:graph1 
+FROM NAMED ns:graph2
+FROM NAMED ns:graph3
+WHERE {GRAPH ?g {?s ?p ?o}} 
+GROUP BY ?g
+ORDER BY asc(?size)
+
+
+# Counting triples in named graphs
+# This query return the count for all existing named graphs on the database.  
+SELECT ?g (count(*) as ?size) 
+FROM NAMED stardog:context:named 
+WHERE { GRAPH ?g {?s ?p ?o} } 
+GROUP BY ?g
+ORDER BY asc(?size)
+
+
+# Counting triples in the default graph
+SELECT ?g (count(*) as ?size) 
+FROM NAMED stardog:context:default 
+WHERE { GRAPH ?g {?s ?p ?o} } 
+GROUP BY ?g
+ORDER BY asc(?size)
+
+
+# Counting triples in all graphs, including the default and named ones
+# This query returns the counts for the default and all named graphs on the database. 
+SELECT ?g (count(*) as ?size) 
+FROM NAMED stardog:context:all 
+WHERE { GRAPH ?g {?s ?p ?o} } 
+GROUP BY ?g
+ORDER BY asc(?size)
+
+
+# Counting triples in each graph 
+# This query is equivalent to the previous one that users stardog:context:all.
+SELECT ?g (count(*) as ?size) 
+WHERE {
+  {
+    GRAPH ?g {?s ?p ?o}
+  }
+   UNION 
+  {
+    ?s ?p ?o  
+    BIND("default" AS ?g)
+  }
+} 
+GROUP BY ?g 
+ORDER BY asc(?size)
+
+
+# Catch all triples 
+SELECT ?g ?s ?p ?o
+WHERE {
+  {
+    GRAPH ?g {?s ?p ?o}
+  }
+   UNION 
+  {
+    ?s ?p ?o  
+    BIND("default" AS ?g)
+  }
+} 
+ORDER BY ?g ?s
+
+
+# Clearing the Graphs (run one statement at a time).
+PREFIX ns: <http://mysparql.ai/ns#>
+CLEAR GRAPH ns:graph1
+
+PREFIX ns: <http://mysparql.ai/ns#>
+CLEAR GRAPH ns:graph2
+
+PREFIX ns: <http://mysparql.ai/ns#>
+CLEAR GRAPH ns:graph3
+
+
+
+
+PREFIX : <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+WHERE {
+{
+     GRAPH ?g {?s ?p ?o}
+}
+FILTER (
+     (
+        (CONTAINS (STR(?s), ?searchString)) ||
+        (CONTAINS (STR(?p), ?searchString)) ||
+        (CONTAINS (STR(?o), ?searchString))
+     )
+     && (
+         ?g IN (:graph1 , :graph2)
+     )
+)
+BIND("book1" AS ?searchString)
+}
+ORDER BY ?g ?s
+
+
+
+PREFIX : <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+FROM NAMED :graph1
+FROM NAMED :graph2
+WHERE {
+{
+     GRAPH ?g {?s ?p ?o}
+}
+FILTER (
+     (
+        (CONTAINS (STR(?s), ?searchString)) ||
+        (CONTAINS (STR(?p), ?searchString)) ||
+        (CONTAINS (STR(?o), ?searchString))
+     )
+)
+BIND("book1" AS ?searchString)
+}
+ORDER BY ?g ?s
+
+
+
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+WHERE {
+{
+     GRAPH ?g {?s ?p ?o}
+}
+}
+ORDER BY ?g ?s
+
+
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+WHERE {
+{
+     GRAPH ?g {?s ?p ?o}
+}
+FILTER (?g IN (ns:graph2 , ns:graph3))
+}
+ORDER BY ?g ?s
+
+
+
+PREFIX ns: <http://mysparql.ai/ns#>
+SELECT
+     ?g ?s ?p ?o
+FROM NAMED ns:graph2
+FROM NAMED ns:graph3
+WHERE {
+     GRAPH ?g {?s ?p ?o}
+}
+ORDER BY ?g ?s

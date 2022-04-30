@@ -1,0 +1,751 @@
+
+
+# Northwind SPARQL Queries
+
+
+# The following prefixes need to be added to the database or 
+# to the beggining of the queries that require them.
+# PREFIX     : <http://www.mysparql.com/resource/northwind/>
+# PREFIX  rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+# PREFIX  xsd: <http://www.w3.org/2001/XMLSchema#>
+# PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+# PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+
+
+# Basic select with specified columns
+
+
+# Query: Employee titles 
+SELECT
+  ?label
+  ?lastName
+  ?firstName
+  ?title
+WHERE {
+  ?emp a :Employee ;
+         rdfs:label ?label ;
+         foaf:title ?title ;
+         foaf:lastName ?lastName ;
+         foaf:firstName ?firstName .      
+}
+
+
+
+# Filtering data
+
+
+# Query: List of Employees in the USA
+SELECT
+  ?label
+  ?lastName
+  ?firstName
+  ?title
+WHERE {
+  ?emp a :Employee ;
+         rdfs:label ?label ;
+         foaf:lastName ?lastName ;
+         foaf:firstName ?firstName ;
+         foaf:title ?title ;
+         :country ?country .
+  FILTER(?country = "USA")
+}
+
+# Note: The same filter can be applied directly as follows
+SELECT
+  ?label
+  ?lastName
+  ?firstName
+  ?title
+WHERE {
+  ?emp a :Employee ;
+         rdfs:label ?label ;
+         foaf:lastName ?lastName ;
+         foaf:firstName ?firstName ;
+         foaf:title ?title ;
+         :country "USA" .
+}
+
+
+
+# Testing for existence of query patterns
+
+
+# Returns a boolean indicating whether a query pattern matches or not.
+# Query: Do I have any employees in the UK?
+ASK {
+  ?emp a :Employee ;
+         :country "UK" .
+}
+
+
+
+
+# Searching by string comparison
+
+
+# Character search pattern (Regex)
+# Query: Companies that contain the word "Rest" in their names.
+SELECT
+  ?companyName
+  ?contactName
+  ?address
+  ?city 
+  ?phone 
+WHERE {
+  ?s a :Customer ;
+       rdfs:label ?companyLabel ;
+       :companyName ?companyName ;
+       :contactName ?contactName ;
+       :address ?address ;
+       :city ?city ;
+       :phone ?phone .
+  FILTER (REGEX(?companyName, "Rest" , "i" )) # Case Insensitive
+  # FILTER CONTAINS (LCASE(?companyName), "rest") # Alternatively, you can use the string function CONTAINS.
+}
+
+
+
+# Joins
+
+
+# Query: Selecting details of products supplied by companies located in the USA
+# Joining product, category and supplier. 
+SELECT 
+  ?productID 
+  ?productName 
+  ?unitsInStock 
+  ?unitPrice 
+  ?categoryName 
+  ?contactName
+WHERE
+{ 
+  ?product a  :Product ;
+              :productID ?productID ;
+              :productName ?productName ;
+              :unitsInStock ?unitsInStock ;
+              :unitPrice ?unitPrice ;
+              :hasCategory ?category ;
+              :hasSupplier ?supplier .
+  ?category a :Category ;
+              :name ?categoryName .
+  ?supplier a :Supplier ;
+              :contactName ?contactName ;
+              :country "USA" .
+} 
+
+
+# Query: Customers who placed at least one order
+# As an exercise, try and add the “ContactName” and “Address” columns missing in the SPARQL query. 
+# Refer to its SQL counterpart query for more info.  
+SELECT DISTINCT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country 
+WHERE {
+  ?order    a :Order .
+  ?customer a :Customer .
+  ?order      :hasCustomer ?customer .
+  ?customer   :customerID ?customerID ;
+              :companyName ?companyName ;
+              :city ?city ;
+              :country ?country .
+  OPTIONAL {?customer :postalCode ?postalCode} . # Some regions don't use PostalCode.
+}
+ORDER BY
+  ?customer
+
+# Query: Customers who never placed an order
+SELECT DISTINCT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country
+WHERE {
+  ?customer a :Customer .
+  ?customer   :customerID ?customerID ;
+              :companyName ?companyName ;
+              :city ?city ;
+              :country ?country .
+  OPTIONAL {?customer :postalCode ?postalCode} . # Some regions don't use PostalCode.
+  OPTIONAL {
+    ?order a  :Order .
+    ?customer ^:hasCustomer ?order # left join - for customers with no orders, ?order variable will be empty.
+  } 
+  FILTER (!BOUND(?order)) # Checks if variable is not bound to a value. 
+}
+ORDER BY
+  ?customer
+
+
+
+# Using comparison and logical operators
+
+
+# Query: Search specific products
+# All products with product names that begin with the letter T or have a product 
+# identification number of 46 and that have a price greater than $16.00.
+SELECT
+  ?productName
+  (STR(?unitPrice) AS ?strUnitPrice) # converting integer to string
+  ?supplierName
+  ?region 
+  ?country 
+WHERE {
+  ?s a :Product ;
+       :productName ?productName ;
+       :productID ?productID ;
+       :hasSupplier ?supplier ; # Joining on supplier
+       :unitPrice ?unitPrice . 
+  # getting supplier properties
+  ?supplier :companyName ?supplierName ;  
+            :country ?country ; 
+  OPTIONAL {?supplier  :region ?region }. # not all suppliers have region
+  FILTER((REGEX(?productName, "^T", "i")) || (?productID = 46 && ?unitPrice > 16)) . # Logical operators
+}
+
+
+
+# Filtering on ranges
+
+
+# Query: Products in specified price range
+# Retrieves products with a unit price between $10.00 and $20.00.
+SELECT
+  ?productName
+  ?companyName
+  ?unitPrice
+WHERE {
+  ?s a :Product ;
+       :productID ?productID ;
+       :productName ?productName ;
+       :hasSupplier ?supplier ; 
+       :unitPrice ?unitPrice .
+  ?supplier a :Supplier ;
+       :companyName ?companyName ;
+       :supplierID ?supplierID .
+  FILTER (?unitPrice >= 18 && ?unitPrice <= 20) 
+}
+
+
+
+# Filtering on list of values
+
+
+# Query: List of suppliers that are located in Japan or Italy
+SELECT
+  ?companyName
+  ?country
+WHERE {
+  ?s a :Supplier ;
+       :companyName ?companyName ;
+       :country ?country .
+  FILTER (UCASE(?country) = "JAPAN" || ?country = "Italy") # case sensitive
+}
+
+
+
+# Working with Nulls
+
+
+# Query: Select only suppliers that have a fax number
+# Note: Fax was a machine from the 90s able to scan and transmit a document over the phone line.
+SELECT
+  ?companyName
+  ?fax
+WHERE {
+  ?s a :Supplier ;
+       :companyName ?companyName ;
+       :fax ?fax . 
+}
+
+
+
+# Query: Select all suppliers
+SELECT
+  ?companyName
+  ?fax
+WHERE {
+  ?s a :Supplier ;
+       :companyName ?companyName ;
+       OPTIONAL {?s :fax ?fax} . 
+}
+
+
+# Query: Select only suppliers that don't have a fax number
+SELECT
+  ?companyName
+  ?fax
+WHERE {
+  ?s a :Supplier ;
+       :companyName ?companyName ;
+       OPTIONAL {?s :fax ?fax} . 
+  FILTER (!BOUND(?fax))
+}
+
+
+# Same result can be obtained by using NOT EXISTS filter
+SELECT 
+  ?companyName
+  ?fax
+ WHERE {
+    ?s a :Supplier ;
+         :companyName ?companyName .
+    FILTER NOT EXISTS {
+      SELECT
+        ?companyName
+      WHERE {
+        ?s a :Supplier ;
+            :companyName ?companyName ;
+            :fax ?fax . 
+        }
+    }
+ }
+
+
+
+# Sorting data
+
+
+# Query: Sort products in each product category by unit price descending
+SELECT
+  ?productName
+  ?categoryName
+  ?unitPrice
+WHERE {
+  ?s a :Product ;
+       :productID ?productID ;
+       :productName ?productName ;
+       :unitPrice ?unitPrice ;
+       :hasCategory ?category .
+  ?category :name ?categoryName . 
+}
+ORDER BY 
+  ASC(?categoryName)
+  DESC(?unitPrice)
+
+
+
+# Eliminating duplicates
+
+
+# Query: Select all countries I buy from
+# Note that there are more than one supplier per country and DISTINCT has been used to eliminate the duplicates.
+SELECT DISTINCT ?country
+WHERE{
+  ?s a :Supplier ;
+       :country ?country .
+}
+ORDER BY ?country # Default sorting
+
+
+
+# Column alias and string concatenation
+
+
+# Query: Create employee code
+SELECT
+  (CONCAT (?firstName, " ", ?lastName) AS ?fullName)
+  ?code
+ WHERE {
+   ?s a :Employee ;
+        foaf:firstName ?firstName ;
+        foaf:lastName ?lastName ;
+        rdfs:label ?employeeLabel ; 
+        :extension ?extension ;
+        :country ?country ;
+  OPTIONAL {?s :region ?region } .
+  BIND(CONCAT(SUBSTR(?firstName,1,1), SUBSTR(?lastName,1,3), "-", ?extension, "-", IF(!BOUND(?region), 
+       CONCAT("INT-", ?country), ?region)) AS ?code)
+ }
+ ORDER BY ?lastName
+
+
+
+# Limiting results
+
+
+# Joins product, order, and orderDetail
+# Query: Top 5 largest quantity of a product sold in a single order
+SELECT
+    ?productName
+    ?orderID
+    ?orderDate
+    ?quantity
+    ?unitsInStock
+WHERE {
+  ?orderDetail  a :OrderDetail .
+  ?order        a :Order .
+  ?product      a :Product .
+  ?orderDetail    :quantity         ?quantity ;
+                  :belongsToOrder   ?order ;
+                  :hasProduct       ?product .
+  ?order          :orderID          ?orderID ;
+                  :orderDate        ?orderDate .
+  ?product        :unitsInStock     ?unitsInStock ;
+                  :productName      ?productName .
+}
+ORDER BY 
+  DESC(?quantity)
+  DESC(?orderDate)
+LIMIT 5
+
+
+
+# Pagination
+
+
+# Query: Retrieve records from 6 to 10 from list of largest quantity of a product sold in a single order
+SELECT
+    ?productName
+    ?orderID
+    ?orderDate
+    ?quantity
+    ?unitsInStock
+WHERE {
+  ?orderDetail  a :OrderDetail .
+  ?order        a :Order .
+  ?product      a :Product .
+  ?orderDetail    :quantity         ?quantity ;
+                  :belongsToOrder   ?order ;
+                  :hasProduct       ?product .
+  ?order          :orderID          ?orderID ;
+                  :orderDate        ?orderDate .
+  ?product        :unitsInStock     ?unitsInStock ;
+                  :productName      ?productName .
+}
+ORDER BY 
+  DESC(?quantity)
+  DESC(?orderDate)
+OFFSET 5
+LIMIT 5
+
+
+
+# Counting
+
+
+# Query: Number of supplier
+SELECT (COUNT(1) AS ?supplierCount)
+WHERE{
+  ?s a :Supplier .
+}
+
+
+
+# Distinct counting
+
+
+# Query: Number of countries I buy from.
+SELECT (COUNT(DISTINCT ?country) AS ?countryCount)
+WHERE{
+  ?s a :Supplier ;
+       :country ?country .
+}
+
+
+
+# Grouping and aggregating data
+
+
+# Query: Top 5 most sold products
+SELECT
+  ?productID
+  (SUM(?quantity) AS ?totalQtySold)  
+WHERE {
+  ?order a :OrderDetail ;
+           :quantity ?quantity ;
+           :hasProduct ?product .
+  ?product :productID ?productID .
+}
+GROUP BY ?productID
+ORDER BY DESC(?totalQtySold)
+LIMIT 5
+
+
+# Query: Top 5 largest orders shipped to the USA
+SELECT
+  ?orderID
+  (ROUND(SUM(?unitPrice * ?quantity * (1 - ?discount))) AS ?total) 
+WHERE {
+  ?order        a :Order ;
+                  :orderID ?orderID ;
+                  :shipCountry "USA" .
+  ?orderDetail  a :OrderDetail ;
+                  :belongsToOrder ?order ;
+                  :unitPrice ?unitPrice ;
+                  :quantity ?quantity ;
+                  :discount ?discount .
+}
+GROUP BY
+  ?orderID
+ORDER BY 
+  DESC(?total)
+LIMIT 5
+
+
+# Query: Orders over 10K shipped to the USA 
+SELECT
+  ?orderID
+  (ROUND(SUM(?unitPrice * ?quantity * (1 - ?discount))) AS ?total)
+WHERE {
+  ?order        a :Order ;
+                  :orderID ?orderID ;
+                  :shipCountry "USA" .
+  ?orderDetail  a :OrderDetail ;
+                  :belongsToOrder ?order ;
+                  :unitPrice ?unitPrice ;
+                  :quantity ?quantity ;
+                  :discount ?discount .
+}
+GROUP BY
+  ?orderID
+HAVING (SUM(?unitPrice * ?quantity * (1 - ?discount)) > 10000)
+ORDER BY 
+  DESC(?total)
+
+
+# Query: Top 5 Supplier Representative by number of products sold
+# Sparql cannot return rows that tie for last place 
+SELECT 
+  ?supplierContactName 
+  (COUNT(?product) as ?productCount)
+WHERE
+{ 
+  ?product a  :Product ;
+              :hasSupplier ?supplier .
+  ?supplier a :Supplier ;
+              :contactName ?supplierContactName .
+} 
+GROUP BY 
+  ?supplierContactName
+ORDER BY
+  DESC(?productCount)
+LIMIT 5
+
+
+
+
+# Recommendation - Products frequently bought together
+
+
+# Query: Customers who bought product-61 also bought which products in the same order?
+SELECT 
+  ?productA
+  ?productB
+  (COUNT (*) AS ?productBCount)
+WHERE {
+  ?productA ^:hasProduct/:belongsToOrder/^(^:hasProduct/:belongsToOrder) ?productB ;
+             :productID ?productID .
+  FILTER (?productA != ?productB && ?productA = :product-61) # Filtering on product-61 for testing
+}
+GROUP BY ?productA ?productB 
+ORDER BY DESC(?productBCount) ?productA ?productB # Most frequent at the top
+
+
+# Query: Customers who bought product-61 also bought which products across all orders?
+SELECT 
+  ?productA
+  ?productB
+  (COUNT (*) AS ?productBCount)
+WHERE {
+  ?productA ^:hasProduct/:belongsToOrder/:hasCustomer/^(^:hasProduct/:belongsToOrder/:hasCustomer) ?productB ;
+            :productID ?productID .
+  FILTER (?productA != ?productB && ?productA = :product-61) # Filtering on product-61 for testing purposes
+}
+GROUP BY ?productA ?productB
+ORDER BY DESC(?productBCount) ?productA ?productB
+
+
+# Query: Number of times products 2 and 61 where bought by the same customer
+SELECT (COUNT (1) AS ?Count)
+WHERE {:product-2 ^:hasProduct/:belongsToOrder/:hasCustomer/^(^:hasProduct/:belongsToOrder/:hasCustomer) :product-61}
+
+
+# The following are the 6 steps taken to develop the query above.
+# For more details on Property Path, please refer to https://www.stardog.com/tutorials/sparql/#toc7.
+
+# Step 1: Triple pattern matching order, orderDetail, product and customer nodes that are directly connected. 
+# List order items that contain product-61
+SELECT *
+WHERE {
+  ?orderDetail :hasProduct ?product ; 
+               :belongsToOrder ?order .
+  ?order       :hasCustomer ?customer .
+  FILTER (?product = :product-61)
+}
+
+# Step 2: Invert the hasProduct path expression to match the following direction: 
+# product --> orderDetail --> order --> customer
+# The same result is returned
+SELECT *
+WHERE {
+  ?product     ^:hasProduct  ?orderDetail . # Invert direction
+  ?orderDetail :belongsToOrder ?order .
+  ?order       :hasCustomer ?customer .
+  FILTER (?product = :product-61)
+}
+
+# Step 3: Use a sequence path to omit the binding of the ?orderDetail variable.  
+SELECT *
+WHERE {
+  ?product ^:hasProduct/:belongsToOrder ?order .
+  ?order   :hasCustomer ?customer .
+  FILTER (?product = :product-61)
+}
+
+# Step 4: Use a sequence path to omit the binding of the ?order variable.
+# All customers that bought product-61
+SELECT DISTINCT * # eliminates duplicates in case the same customer bought a product more than once
+WHERE {
+  ?product ^:hasProduct/:belongsToOrder/:hasCustomer ?customer .
+  FILTER (?product = :product-61)
+}
+ORDER BY ?product
+
+# Step 5: Remove the ?product variable and apply the filter directly to the subject. 
+SELECT DISTINCT * # eliminates duplicates in case the same customer bought a product more than once
+WHERE {
+  :product-61 ^:hasProduct/:belongsToOrder/:hasCustomer ?customer .
+}
+ORDER BY ?product
+
+# Step 6: And finally, omit the binding of the ?customer varaible and invert the full path back to product.  
+SELECT (COUNT (1) AS ?Count)
+WHERE {:product-2 ^:hasProduct/:belongsToOrder/:hasCustomer/^(^:hasProduct/:belongsToOrder/:hasCustomer) :product-61}
+
+
+
+# Combining multiple result sets using union
+
+
+# Query: Contact details of suppliers, customers and employees for Xmas cards
+# As an exercise, try and add the “type” column missing in the SPARQL query. 
+# Refer to its SQL counterpart query for more info. 
+SELECT
+  ?contactName ?address ?city ?postalCode ?country
+WHERE {
+  {
+    ?supplier a :Supplier ;
+      :contactName ?contactName ;
+      :address ?address ;
+      :city ?city ;
+      :postalCode ?postalCode ;
+      :country ?country .
+  }
+  UNION
+  {
+    ?customer a :Customer ;
+      :contactName ?contactName ;
+      :address ?address ;
+      :city ?city ;
+      :postalCode ?postalCode ;
+      :country ?country .
+  }
+   UNION
+  {
+    ?employee a :Employee ;
+      foaf:firstName ?firstName ;
+      foaf:lastName ?lastName ;
+      :address ?address ;
+      :city ?city ;
+      :postalCode ?postalCode ;
+      :country ?country .
+    BIND (CONCAT (?firstName, " ", ?lastName) AS ?contactName)
+  }
+}
+
+
+
+# Subqueries
+
+
+# Query: Select all products that belong to the Seafood category
+SELECT
+  ?productName
+  ?unitPrice
+  ?unitsInStock
+WHERE { # outer query
+  ?product a :Product ;
+             :productName ?productName ;
+             :unitPrice ?unitPrice ;
+             :unitsInStock ?unitsInStock ;
+             :hasCategory ?category . 
+    { # inner query
+      SELECT 
+        ?category
+      WHERE {
+        ?category a :Category ;
+                    :categoryID ?categoryID ;
+                    :name "Seafood" .
+      }
+    }
+  }
+  ORDER BY
+    ?productName
+
+
+# Query: Calculate the average number of orders processed per year 
+SELECT 
+  (AVG(?orderCount) AS ?avgCount) 
+  (MIN(?orderYear) AS ?startYear)
+  (MAX(?orderYear) AS ?endYear)
+{
+  SELECT ?orderYear (count(?order) AS ?orderCount)
+  WHERE {
+    ?order a :Order ;
+            :orderDate ?orderDate ;
+    BIND(year(?orderDate) AS ?orderYear)
+  }
+  GROUP BY ?orderYear
+}
+
+
+
+# Inserting and updating data
+
+
+# Query: Insert a new customer
+INSERT DATA {
+  :customer-AAAAA a :Customer ;
+  rdfs:label "customer-AAAAA" ;
+  :customerID "AAAAA" ;
+  :companyName "Northwind" ;
+  :contactName "John Lennon" ;
+  :contactTitle "CTO" ;
+  :address "Abbey Road" ;
+  :city "London" .
+}
+
+# Checking if new customer has been added successfully
+DESCRIBE :customer-AAAAA     
+
+
+# Query: Update existing customer 
+# In SQL you can just update multiple colums of a record in a single update statement. 
+# However, in SPARQL, we will need to acomplish this in two steps.
+
+# Step 1: Insert new triple for for the properties not included the previous query
+INSERT DATA {
+  :customer-AAAAA a :Customer ;
+  :country "UK" ;
+  :postalCode "SW1A 2AA" . 
+}
+
+# Step 2: Update the property values added. 
+DELETE {
+  :customer-AAAAA :address ?oldAddress 
+}
+INSERT {
+  :customer-AAAAA :address ?newAddress
+}
+WHERE {
+  :customer-AAAAA a :Customer ;
+  :address ?oldAddress ;
+  BIND("10 Downing Road" AS ?newAddress) .
+}
+
+

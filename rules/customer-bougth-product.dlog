@@ -1,0 +1,6 @@
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+[?customer, :boughtProduct, ?product] :-
+    [?orderDetail, :hasProduct, ?product],
+    [?orderDetail, :belongsToOrder, ?order],
+    [?order, :hasCustomer, ?customer] .

@@ -1,0 +1,11 @@
+PREFIX     : <http://www.mysparql.com/resource/northwind/>
+
+SELECT  DISTINCT ?customer
+WHERE { GRAPH :dataGraph {
+  ?orderDetail :hasProduct ?product ; 
+               :belongsToOrder ?order .
+  ?order       :hasCustomer ?customer .
+  FILTER (?product = :product-61)
+  }
+}
+ORDER BY ?customer
