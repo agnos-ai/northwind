@@ -14,6 +14,13 @@ Visit RDFox web site to request a trial license and copy it there before running
 
 
 ## Running the container
+
+### Usage
+For help using the local-run.sh command, run the following:
+
+`./local-run.sh -h `
+
+
 To run the container, execute the command below.
 
 `./local-run.sh -u "admin" -p "admin" `
@@ -31,17 +38,13 @@ Queries and rules can be found under their respective folders in this repository
 
 TODO: Document queries and diagrams here
 
-### Add a rule
+### Adding a rule
 To add each rule, execute the following in the command line after replacing the name of the rule:
 
 ` curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" --user admin:admin -H "Content-Type:" -T "rules/<name-of-the-rule>.dlog" "localhost:12110/datastores/Northwind/content" `
 
-## Cleaning up the local environment
+## Cleanning up the local environment
 This following command will stop and remove all containers, remove all images, and delete all Volumes. 
 
 `./local-cleanup.sh`
 
-## For Usage run:
-For help using the local-run.sh command, run the following:
-
-`./local-run.sh -h `
