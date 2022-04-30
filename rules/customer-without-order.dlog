@@ -1,0 +1,8 @@
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+[?customer, a, ?customerWithoutOrder] :-
+    [?customer, a, :Customer], # All customers
+    NOT EXISTS ?customer IN (
+      [?order, a, :Order], 
+      [?order, :hasCustomer, ?customer] # Only customers who placed orders
+   ) .
