@@ -75,7 +75,7 @@ echo "${header}Build Image${reset}"
 ./local-build.sh || exit $?
 
 
-echo "${header}Run Container, Start RDFox Server and Create Repository${reset}"
+echo "${header}Run container and start RDFox server${reset}"
 { 
   # cap-drop ALL: oxfordsemantic/rdfox repositoryname have been designed to run with no superuser capabilities
   docker run --rm --cap-drop ALL --name rdfoxcontainer \
@@ -90,7 +90,7 @@ echo "${header}Run Container, Start RDFox Server and Create Repository${reset}"
 }& # Start the RDFox Container in the background
 
 
-echo "${header}Set up Nothwind sample data store${reset}"
+echo "${header}Create the Nothwind sample data store${reset}"
 
 test=1
 while [ ${test} != 0 ]; do
@@ -104,9 +104,6 @@ done
 # Grant full access to all downloaded data files and ontologies, rules and queries.
 chmod -R u+rwx ./
 
-
-# Create the Northwind repository
-curl -X POST --user "${user}":"${password}" "localhost:${port}/datastores/Northwind?type=par-complex-nn"
 
 # Import Northwind data into the dataGraph
 curl -X POST -G \
@@ -122,23 +119,13 @@ curl -X POST -G \
 # "localhost:${port}/datastores/Northwind/content" 
 
 
-# Import Rules manually, one by one, as part of the demo
-# echo Import Datalog Rules
-# curl -X POST -G \
-# --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" \
-# --user "${user}":"${password}" -H "Content-Type:" -T "rules/boughtProduct.dlog" "localhost:12110/datastores/Northwind/content"
-
-# curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" \
-# --user admin:admin -H "Content-Type:" -T "rules/boughtProduct.dlog" "localhost:12110/datastores/Northwind/content"
-
-
 # TODO: Create Axioms
 # Axioms
 # curl PATCH --user "${user}":"${password}" -H "Content-Type:" "localhost:${port}/datastores/Northwind/content?operation=add-axioms&source-graph-name=dataGraph&destination-graph-name=axiomGraph"
 # curl PATCH --user "admin":"admin" "localhost:12110/datastores/Northwind/content?operation=add-axioms&source-graph-name=#data&destination-graph-name=axiomGraph"
 
 
-echo "${header}Data stores created${reset}"
+echo "${header}List data stores created${reset}"
 curl -X GET --user "${user}":"${password}" "localhost:${port}/datastores"
 
 

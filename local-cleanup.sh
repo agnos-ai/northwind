@@ -3,7 +3,7 @@
 source ./terminal.sh
 customize_terminal_output
 
-# Stop and RemoveALL containers
+# Stop and Remove ALL containers
 
 echo "${header}Stop and remove containers${reset}"
 
