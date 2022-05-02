@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_IMAGE_NAME="docker.io/agnosai/rdfox"
+_IMAGE_NAME="docker.io/agnosai/rdfox-rules"
 _IMAGE_VERSION="latest"
 _MANUALLY_INCREMENTED_IMAGE_VERSION="5.5"
 

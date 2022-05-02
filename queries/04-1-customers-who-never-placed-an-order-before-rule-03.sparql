@@ -1,0 +1,62 @@
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+# Customers who never placed an order
+
+SELECT DISTINCT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country
+WHERE { 
+    GRAPH ?graph {
+        ?customer a :Customer .
+        ?customer   :customerID ?customerID ;
+                    :companyName ?companyName ;
+                    :city ?city ;
+                    :country ?country .
+        OPTIONAL {?customer :postalCode ?postalCode} . # Some regions don't use PostalCode.
+        OPTIONAL {
+            ?order a  :Order .
+            ?customer ^:hasCustomer ?order # left join - for customers with no orders, ?order variable will be empty.
+        } 
+        FILTER (!BOUND(?order)) # Checks if variable is not bound to a value. 
+    }
+}
+ORDER BY ?customer
+
+
+# Customers who never placed an order (MINUS vs FILTER NOT EXISTS)
+
+# MINUS: Removes matches based on the evaluation of two separate basic graph patterns (BGP). It subtracts results. 
+# FILTER NOT EXISTS: Evaluates the two basic graph patterns (BGP) as one solution.
+# Therefore, in the example below, if we change the "?customer" shared variable in the second BGP to "?s" we get the 
+# following results:
+# MINUS: All the triples from the first BGP are returned.
+# FILE NOT EXISTS: No results are produced as the two BGPs do not have a solution as no shared variables exist to bind them.
+
+SELECT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country
+WHERE { 
+  GRAPH ?graph {
+    {
+      ?customer a :Customer ; # All customers
+      :customerID ?customerID ;
+      :companyName ?companyName ;
+      :city ?city ;
+      :country ?country .
+    }
+      FILTER NOT EXISTS
+      # MINUS
+    {
+      ?customer a :Customer . # Customers who placed orders
+      ?order a  :Order .
+      ?order :hasCustomer ?customer .
+    }
+  }
+}
+  

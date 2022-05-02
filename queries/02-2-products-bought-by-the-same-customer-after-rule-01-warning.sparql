@@ -1,8 +1,9 @@
 PREFIX     : <http://www.mysparql.com/resource/northwind/>
 
 # Products bought by the same customer 
+# Returns all combinations of product-2 and product-61 bought by a customer across all orders.
 
-# WARNING!!! Must be careful here. This query won't produce the expected result as 
+# WARNING!!! Must be careful here. This query will not produce the expected result as 
 # the rule doesn't account for customers who bought the same product multiple times.
 SELECT 
     (COUNT (1) AS ?Count) 

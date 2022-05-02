@@ -560,7 +560,7 @@ GROUP BY ?productA ?productB
 ORDER BY DESC(?productBCount) ?productA ?productB
 
 
-# Query: Number of times products 2 and 61 where bought by the same customer
+# Query: Number of times products 2 and 61 where bought by the same customer (combination)
 SELECT (COUNT (1) AS ?Count)
 WHERE {:product-2 ^:hasProduct/:belongsToOrder/:hasCustomer/^(^:hasProduct/:belongsToOrder/:hasCustomer) :product-61}
 

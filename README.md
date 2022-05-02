@@ -1,5 +1,6 @@
 # RDFox Rules on Northwind
 
+
 ## Introduction
 
 This repository will spin a RDFox server with the Northwind data store. 
@@ -16,17 +17,23 @@ Visit RDFox web site to request a trial license and copy it there before running
 `home/RDFox.lic`
 
 
+## Host computer Pre-requisits
+
+You must have **Homebrew** and **Curl** installed on the host computer in order to be able to run the exercises in this demo. Please, follow the instructions on this [web site](https://help.ubidots.com/en/articles/2165289-learn-how-to-install-run-curl-on-windows-macosx-linux) to install those tools on Windows, MacOS, and Linux.
+
+
 ## Running the container
 
 ### Usage
-For help using the local-run.sh command, run the following:
+For help using the local-run.sh command, run the following in your terminal:
 
 `./local-run.sh -h `
 
 
-To run the container, execute the command below.
+To run the container, execute the command below in your terminal:
 
 `./local-run.sh -u "admin" -p "admin" `
+
 
 ## Exercises
 
@@ -36,20 +43,19 @@ After the container is running, you will be able to browse to the RDFox console 
 
 Execute SPARQL queries before and after each rule is added.
 
-Queries and rules can be found under their respective folders in this repository.
-
-
-TODO: Document queries and diagrams here
+Queries and rules can be found under their respective folders in this repository. Note that the rule used in each query is specified in the query name. 
 
 ### Adding a rule
-To add each rule, execute the following in the command line after replacing the name of the rule:
+To add a rule, execute the following in your terminal after replacing the name of the rule in `<name-of-the-rule>.dlog`:
 
 ` curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" --user admin:admin -H "Content-Type:" -T "rules/<name-of-the-rule>.dlog" "localhost:12110/datastores/Northwind/content" `
 
-TODO: What the user need to install on each OS to be able to run curl?
 
 ## Cleanning up the local environment
 This following command will stop and remove all containers, remove all images, and delete all Volumes. 
 
 `./local-cleanup.sh`
 
+
+
+TODO: Document queries and diagrams here

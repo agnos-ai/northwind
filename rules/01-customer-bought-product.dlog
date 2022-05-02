@@ -1,6 +1,6 @@
 PREFIX : <http://www.mysparql.com/resource/northwind/>
 
-# WARNING!!! This rule only tells which product a customer bought, but not how many times. 
+# WARNING!!! This rule answers if a customer bought a product, but not how many times. 
 
 [?customer, :boughtProduct, ?product] :-
     [?orderDetail, :hasProduct, ?product],
