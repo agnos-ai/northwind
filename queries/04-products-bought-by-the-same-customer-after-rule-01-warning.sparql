@@ -1,0 +1,14 @@
+PREFIX     : <http://www.mysparql.com/resource/northwind/>
+
+# Products bought by the same customer 
+
+# WARNING!!! Must be careful here. This query won't produce the expected result as 
+# the rule doesn't account for customers who bought the same product multiple times.
+SELECT 
+    (COUNT (1) AS ?Count) 
+    ?graph
+WHERE {
+    GRAPH ?graph {
+        :product-2 ^:boughtProduct/^(^:boughtProduct) :product-61
+    }
+}

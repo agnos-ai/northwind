@@ -1,4 +1,6 @@
-PREFIX     : <http://www.mysparql.com/resource/northwind/>
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+# Customers who bought product-61
 
 SELECT DISTINCT # eliminates duplicates in case the same customer bought a product more than once
   ?customer 

@@ -1,6 +1,7 @@
 PREFIX : <http://www.mysparql.com/resource/northwind/>
 
-# Query: Customers who never placed an order
+# Customers who never placed an order
+
 SELECT DISTINCT 
   ?customer
   ?companyName
@@ -25,7 +26,8 @@ WHERE {
 ORDER BY ?customer
 
 
-# Query: Customers who never placed an order (using MINUS)
+# Customers who never placed an order (using FILTER NOT EXISTS)
+
 SELECT 
   ?customer
   ?companyName
@@ -40,7 +42,7 @@ WHERE {
     :city ?city ;
     :country ?country .
   }
-    MINUS
+    FILTER NOT EXISTS
   {
     ?customer a :Customer . # Customers who placed orders
     ?order a  :Order .

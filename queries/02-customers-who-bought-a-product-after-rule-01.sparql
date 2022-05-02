@@ -1,8 +1,9 @@
-PREFIX     : <http://www.mysparql.com/resource/northwind/>
+PREFIX : <http://www.mysparql.com/resource/northwind/>
 
-# The rule answers if a customer bought product-61, but not how many times.
-# Therefore, the DISTINCT is not needed in this query anymore. 
-# TODO: create a rule to include how many times a customer bought a product. 
+# Customers who bought product-61
+
+# The rule ":boughtProduct" only tells if a customer bought product-61, but not how many times.
+# Therefore, the DISTINCT is not required to eliminate duplicates. 
 SELECT 
   ?customer 
   ?companyName 

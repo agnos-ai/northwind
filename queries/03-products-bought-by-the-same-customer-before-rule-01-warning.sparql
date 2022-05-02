@@ -1,5 +1,7 @@
 PREFIX     : <http://www.mysparql.com/resource/northwind/>
 
+# Products bought by the same customer 
+
 SELECT 
     (COUNT (1) AS ?Count) 
     ?graph

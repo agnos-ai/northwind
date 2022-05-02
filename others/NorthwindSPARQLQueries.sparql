@@ -181,30 +181,6 @@ ORDER BY
   ?customer
 
 
-# Query: Customers who never placed an order (using MINUS)
-SELECT 
-  ?customer
-  ?companyName
-  ?postalCode
-  ?city
-  ?country
-WHERE { 
-  {
-    ?customer a :Customer ; # All customers
-    :customerID ?customerID ;
-    :companyName ?companyName ;
-    :city ?city ;
-    :country ?country .
-  }
-    MINUS
-  {
-    ?customer a :Customer . # Customers who placed orders
-    ?order a  :Order .
-    ?order :hasCustomer ?customer .
-  }
-}
-       
-
 
 # Using comparison and logical operators
 
@@ -773,3 +749,136 @@ WHERE {
 }
 
 
+
+# ******************************************************************** EXTRAS ********************************************************************
+
+
+# Query: Customers who never placed an order (using MINUS: based on removing matches based on the evaluation of two patterns - subtracts results)
+SELECT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country
+WHERE { 
+  {
+    ?customer a :Customer ; # All customers
+    :customerID ?customerID ;
+    :companyName ?companyName ;
+    :city ?city ;
+    :country ?country .
+  }
+    MINUS
+  {
+    ?customer a :Customer . # Customers who placed orders
+    ?order a  :Order .
+    ?order :hasCustomer ?customer .
+  }
+}
+       
+
+# Query: Customers who never placed an order (using FILTER NOT EXISTS: based on testing whether a pattern exists in the data, given the bindings already determined by the query pattern)
+SELECT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country
+WHERE { 
+  {
+    ?customer a :Customer ; # All customers
+    :customerID ?customerID ;
+    :companyName ?companyName ;
+    :city ?city ;
+    :country ?country .
+  }
+    FILTER NOT EXISTS
+  {
+    ?customer a :Customer . # Customers who placed orders
+    ?order a  :Order .
+    ?order :hasCustomer ?customer .
+  }
+}
+
+
+
+# MINUS vs FILTER NOT EXISTS
+
+
+# Refer to screenshots in RDFox for this example
+
+# Example data
+
+PREFIX :       <http://example/> 
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/> 
+
+INSERT DATA {
+  :alice  foaf:givenName "Alice" ;
+          foaf:familyName "Smith" .
+
+  :bob    foaf:givenName "Bob" ;
+          foaf:familyName "Jones" .
+
+  :carol  foaf:givenName "Carol" ;
+          foaf:familyName "Smith" .
+}
+
+
+# MINUS: evaluates two patters and subtract the results.
+# With shared variable ?s, it produces results with alice and carol.
+
+PREFIX :       <http://example/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+
+SELECT ?s ?p ?o ?x
+WHERE {
+   ?s ?p ?o .
+   MINUS
+  {
+      ?s foaf:givenName "Bob" .
+   }}
+
+
+# With no shared variable, if returns alice, carol and bob. 
+# The substraction is based on a shared variable that doesn't exist in this case, so all results of the first pattern are returned.
+
+PREFIX :       <http://example/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+
+SELECT ?s ?p ?o ?x
+WHERE {
+   ?s ?p ?o .
+   MINUS
+  {
+      ?x foaf:givenName "Bob" .
+   }}
+
+
+# This returns the same results as the first query with MINUS, where there is a shared variable.
+
+PREFIX :       <http://example/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+
+SELECT ?s ?p ?o ?x
+WHERE {
+   ?s ?p ?o .
+   FILTER NOT EXISTS
+  {
+      ?s foaf:givenName "Bob" .
+   }
+}
+
+
+# However, with no shared variable, there is no solution, as with NOT EXISTS both patterns are part of the solution. 
+
+PREFIX :       <http://example/>
+PREFIX foaf:   <http://xmlns.com/foaf/0.1/>
+
+SELECT ?s ?p ?o ?x
+WHERE {
+   ?s ?p ?o .
+   FILTER NOT EXISTS
+  {
+      ?x foaf:givenName "Bob" .
+   }
+}
