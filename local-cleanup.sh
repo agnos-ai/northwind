@@ -28,6 +28,7 @@ then
 fi
 
 # Delete ALL Volumes
+
 echo "${header}Delete volumes${reset}"
 
 if [[ -z "$(docker volume ls -q | uniq)" ]] ; 
@@ -37,3 +38,10 @@ then
     docker rmi -f $(docker volume ls -q | uniq)  || exit 1
     echo "${info}All volumes have been deleted${reset}" 
 fi
+
+# Delete RDFox data files
+
+echo "${header}Delete RDFox data files${reset}"
+cd home
+rm -Rf */
+rm -rf .RDFox
