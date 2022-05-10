@@ -1,8 +1,12 @@
 PREFIX : <http://www.mysparql.com/resource/northwind/>
 
-# WARNING!!! This rule answers if a customer bought a product, but not how many times. 
+# WARNING!!! This rule answers if a customer bought a product, but not how many times.
+# To add this rule, execute the following command in the terminal:
+# curl -X POST -G --user admin:admin -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
 
-[?customer, :boughtProduct, ?product] :-
-    [?orderDetail, :hasProduct, ?product],
-    [?orderDetail, :belongsToOrder, ?order],
-    [?order, :hasCustomer, ?customer] .
+:dataGraph(?customer, :boughtProduct, ?product) :-
+    :dataGraph(?orderDetail, :hasProduct, ?product),
+    :dataGraph(?orderDetail, :belongsToOrder, ?order),
+    :dataGraph(?order, :hasCustomer, ?customer) .
+
+
