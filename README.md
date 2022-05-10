@@ -46,7 +46,7 @@ Execute SPARQL queries before and after each rule is added.
 Queries and rules can be found under their respective folders in this repository. Note that the rule used in each query is specified in the query name. 
 
 ### Adding a rule
-The command to add each rule can be found inside the rule dlog file.
+The command to add the rule can be found inside each rule dlog file.
 
 ## Cleanning up the local environment
 This following command will stop and remove all containers, remove all images, and delete all Volumes. 
@@ -54,5 +54,4 @@ This following command will stop and remove all containers, remove all images, a
 `./local-cleanup.sh`
 
 
-
-TODO: Document queries and diagrams here
+TODO: Document queries, rules and diagrams here
