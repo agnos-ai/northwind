@@ -10,8 +10,8 @@ SELECT DISTINCT
   ?country
 WHERE { 
     GRAPH ?graph {
-        ?customer a :Customer .
-        ?customer   :customerID ?customerID ;
+        ?customer a :Customer ;
+                    :customerID ?customerID ;
                     :companyName ?companyName ;
                     :city ?city ;
                     :country ?country .

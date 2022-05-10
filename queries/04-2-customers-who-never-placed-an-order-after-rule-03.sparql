@@ -1,0 +1,21 @@
+PREFIX : <http://www.mysparql.com/resource/northwind/>
+
+# Customers who never placed an order
+
+SELECT DISTINCT 
+  ?customer
+  ?companyName
+  ?postalCode
+  ?city
+  ?country
+WHERE { 
+    GRAPH ?graph {
+        ?customer a :CustomerWithoutOrder ;
+                    :customerID ?customerID ;
+                    :companyName ?companyName ;
+                    :city ?city ;
+                    :country ?country .
+        OPTIONAL {?customer :postalCode ?postalCode} . # Some regions don't use PostalCode.
+    }
+}
+ORDER BY ?customer

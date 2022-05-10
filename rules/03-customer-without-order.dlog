@@ -3,9 +3,9 @@ PREFIX : <http://www.mysparql.com/resource/northwind/>
 # To add this rule, execute the following command in the terminal. Note that the default-graph-name is set to :dataGraph, so that you don't need to specify the graph in the rule itself.
 # curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" --user admin:admin -H "Content-Type:" -T "rules/03-customer-without-order.dlog" "localhost:12110/datastores/Northwind/content"
 
-[?customer, a, ?customerWithoutOrder] :-
+[?customer, a, :CustomerWithoutOrder] :-
     [?customer, a, :Customer], # All customers
-    NOT EXISTS ?customer IN (
+    NOT EXISTS ?order IN (
       [?order, a, :Order], 
       [?order, :hasCustomer, ?customer] # Only customers who placed orders
-   ) .
+    ) .
