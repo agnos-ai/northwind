@@ -11,16 +11,18 @@ https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
 
 ## License
 
-This Docker container checks for the existence of an RDFox.lic license file in the home folder. 
+This Docker container checks for the existence of an RDFox.lic license file in the home folder: `home/RDFox.lic`. 
 Visit RDFox web site to request a trial license and copy it there before running the container. 
 
-`home/RDFox.lic`
 
+## Pre-requisits
 
-## Host computer Pre-requisits
+### MacOS
 
 You must have **Homebrew** and **Curl** installed on the host computer in order to be able to run the exercises in this demo. Please, follow the instructions on this [web site](https://help.ubidots.com/en/articles/2165289-learn-how-to-install-run-curl-on-windows-macosx-linux) to install those tools on Windows, MacOS, and Linux.
 
+### Windows
+TODO
 
 ## Running the container
 
