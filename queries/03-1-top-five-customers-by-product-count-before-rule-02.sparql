@@ -12,7 +12,7 @@ WHERE {
     ?orderDetail :hasProduct ?product ; 
                  :belongsToOrder ?order .
     ?order       :hasCustomer ?customer .
-    ?customer	   :companyName ?companyName ;
+    ?customer	 :companyName ?companyName ;
                  :contactName ?contactName .
   }
 }

@@ -11,7 +11,7 @@ WHERE {
     ?orderDetail :hasProduct :product-61 ; 
                  :belongsToOrder ?order .
     ?order       :hasCustomer ?customer .
-    ?customer	   :companyName ?companyName ;
+    ?customer	 :companyName ?companyName ;
                  :contactName ?contactName .
   }
 }
