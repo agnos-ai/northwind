@@ -15,7 +15,7 @@ This Docker container checks for the existence of an RDFox.lic license file in t
 Visit RDFox web site to request a trial license and copy it there before running the container. 
 
 
-## Pre-requisits
+## Host Pre-requisits
 
 ### MacOS
 
