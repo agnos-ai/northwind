@@ -4,7 +4,7 @@
 ## Introduction
 
 This repository will spin a RDFox server with the Northwind data store. 
-You will need to have Docker running on your local machine. Please visit the official Docker web site to download and install Docker. 
+You will need to have Docker running on your local machine. Please visit the official Docker website to download and install Docker. 
 For detailed information on the Northwind sample data store, please refer to the following article:
 https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
 
@@ -12,10 +12,10 @@ https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
 ## License
 
 This Docker container checks for the existence of an RDFox.lic license file in the home folder: `home/RDFox.lic`. 
-Visit RDFox web site to request a trial license and copy it there before running the container. 
+Visit RDFox website to request a trial license and copy it there before running the container. 
 
 
-## Host pre-requisits
+## Host pre-requisites
 
 ### MacOS
 
@@ -50,7 +50,7 @@ Queries and rules can be found under their respective folders in this repository
 ### Adding a rule
 The command to add the rule can be found inside each rule dlog file.
 
-## Cleanning up the local environment
+## Cleaning up the local environment
 This following command will stop and remove all containers, remove all images, and delete all Volumes. 
 
 `./local-cleanup.sh`
