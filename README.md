@@ -11,8 +11,8 @@ https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
 
 ## License
 
-This Docker container checks for the existence of an RDFox.lic license file in the home folder: `home/RDFox.lic`. 
-Visit RDFox website to request a trial license and copy it there before running the container. 
+This Docker container checks for the existence of an RDFox.lic license file in the repository home directory: `/northwind/home/RDFox.lic`. 
+Visit RDFox website to request a trial license and copy it to the location specified above on your local machine.
 
 
 ## Host pre-requisites
@@ -27,9 +27,9 @@ TODO
 ## Running the container
 
 ### Usage
-For help using the local-run.sh command, run the following in your terminal:
+For help using the local-run.sh command, execute the following in your terminal:
 
-`./local-run.sh -h `
+`./local-run.sh -help `
 
 
 To run the container, execute the command below in your terminal:

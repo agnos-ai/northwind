@@ -10,7 +10,7 @@ help()
    echo "${header}******************** Usage ********************${reset}"
    echo   "Usage:"
    echo   "   ./local-run.sh [OPTIONS]"
-   echo   "   Starts an RDFox container with an injected license."
+   echo   "   Starts an RDFox container with the Northwind sample data store."
    echo 
    echo   "Options:"
    echo   "   -u  User."
@@ -21,9 +21,6 @@ help()
    echo
    exit 0
 }
-
-
-echo "${header}Set and validate input parameters${reset}"
 
 while getopts ":u:p:r:t:h:" opt; do
   case $opt in
@@ -52,6 +49,9 @@ while getopts ":u:p:r:t:h:" opt; do
   esac
 done
 
+
+echo "${header}Validate input parameters${reset}"
+
 if [[ -z "${repositorytype}" ]] ; then
        repositorytype="par-complex-nn"
 fi
@@ -61,7 +61,7 @@ if [[ -z "${port}" ]] ; then
 fi
 
 if [[ -z "${user}" ]] || [[ -z "${password}" ]] ; then
-  echo "${error}ERROR${reset}: A mandatory paramenter is missing."
+  echo "${error}ERROR${reset}: A mandatory parameter is missing."
   help
 fi
 
@@ -70,6 +70,7 @@ echo "password: "$password
 echo "port: "$port
 echo "repositorytype: "$repositorytype
 echo "Parameter validation complete. "
+
 
 echo "${header}Build Image${reset}"
 ./local-build.sh || exit $?
@@ -90,7 +91,7 @@ echo "${header}Run container and start RDFox server${reset}"
 }& # Start the RDFox Container in the background
 
 
-echo "${header}Create the Nothwind sample data store${reset}"
+echo "${header}Create the Northwind sample data store${reset}"
 
 test=1
 while [ ${test} != 0 ]; do
