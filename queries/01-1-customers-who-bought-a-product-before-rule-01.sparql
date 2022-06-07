@@ -21,10 +21,10 @@ ORDER BY ?customer
 
 
 # The following is the property path version of the query above
-
+PREFIX : <http://www.mysparql.com/resource/northwind/>
 SELECT DISTINCT ?customer 
 WHERE { GRAPH ?graph {
-    :product-61 ^:hasProduct/:belongsToOrder/:hasCustomer ?customer .
+    ?customer ^:hasCustomer/^:belongsToOrder/:hasProduct :product-61 .
   }
 }
 ORDER BY ?product

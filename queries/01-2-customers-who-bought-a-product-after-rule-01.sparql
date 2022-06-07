@@ -16,15 +16,3 @@ WHERE {
   }
 }
 ORDER BY ?customer
-
-
-
-
-# The following is the property path version of the query above
-
-SELECT DISTINCT ?customer 
-WHERE { GRAPH ?graph {
-    :product-61 ^:boughtProduct ?customer .
-  }
-}
-ORDER BY ?product
