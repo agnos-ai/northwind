@@ -1,4 +1,5 @@
 PREFIX : <http://www.mysparql.com/resource/northwind/>
+PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 # Top 5 customers by product count
 
@@ -8,7 +9,7 @@ SELECT
   ?contactName
   (COUNT(?product) as ?count)
 WHERE { 
-  GRAPH :dataGraph {
+  GRAPH kggraph:dataGraph {
     ?orderDetail :hasProduct ?product ; 
                  :belongsToOrder ?order .
     ?order       :hasCustomer ?customer .

@@ -1,4 +1,5 @@
-PREFIX : <http://www.mysparql.com/resource/northwind/>
+PREFIX        : <http://www.mysparql.com/resource/northwind/>
+PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 # Customers who never placed an order
 
@@ -15,12 +16,12 @@ WHERE {
                     :companyName ?companyName ;
                     :city ?city ;
                     :country ?country .
-        OPTIONAL {?customer :postalCode ?postalCode} . # Some regions don't use PostalCode.
+        OPTIONAL {?customer :postalCode ?postalCode} .
         OPTIONAL {
             ?order a  :Order .
-            ?customer ^:hasCustomer ?order # left join - for customers with no orders, ?order variable will be empty.
+            ?customer ^:hasCustomer ?order
         } 
-        FILTER (!BOUND(?order)) # Checks if variable is not bound to a value. 
+        FILTER (!BOUND(?order))
     }
 }
 ORDER BY ?customer

@@ -1,4 +1,5 @@
 PREFIX     : <http://www.mysparql.com/resource/northwind/>
+PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 # Products bought by the same customer
 # Returns all combinations of product-2 and product-61 bought by a customer across all orders.

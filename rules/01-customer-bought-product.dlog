@@ -1,12 +1,14 @@
 PREFIX : <http://www.mysparql.com/resource/northwind/>
+PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 # WARNING!!! This rule answers if a customer bought a product, but not how many times.
 # To add this rule, execute the following command in the terminal:
-# curl -X POST -G --user admin:admin -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
+# Sandbox (no authentication): curl -X POST -G -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
+# Shell (with authentication): curl -X POST -G --user admin:admin -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
 
-:dataGraph(?customer, :boughtProduct, ?product) :-
-    :dataGraph(?orderDetail, :hasProduct, ?product),
-    :dataGraph(?orderDetail, :belongsToOrder, ?order),
-    :dataGraph(?order, :hasCustomer, ?customer) .
+kggraph:dataGraph(?customer, :boughtProduct, ?product) :-
+    kggraph:dataGraph(?orderDetail, :hasProduct, ?product),
+    kggraph:dataGraph(?orderDetail, :belongsToOrder, ?order),
+    kggraph:dataGraph(?order, :hasCustomer, ?customer) .
 
 
