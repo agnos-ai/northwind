@@ -7,8 +7,8 @@ INSERT DATA {
     GRAPH kggraph:dataGraph {
         :order-99999 a :Order .
         :orderDetail-99999-61 a :OrderDetail ;
-            :hasProduct :product-61 ;
-            :belongsToOrder :order-99999 .
+                              :hasProduct :product-61 ;
+                              :belongsToOrder :order-99999 .
         :order-99999 :hasCustomer :customer-FISSA ;
     }
 }
