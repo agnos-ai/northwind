@@ -9,11 +9,14 @@ SELECT DISTINCT # eliminates duplicates in case the same customer bought a produ
   ?contactName
 WHERE { 
   GRAPH kggraph:dataGraph {
-    ?orderDetail :hasProduct :product-61 ; 
-                 :belongsToOrder ?order .
-    ?order       :hasCustomer ?customer .
-    ?customer	 :companyName ?companyName ;
+    ?customer    a :Customer ;
+                 :companyName ?companyName ;
                  :contactName ?contactName .
+    ?order       a :Order ;
+                 :hasCustomer ?customer .
+    ?orderDetail a :OrderDetail ;
+                 :hasProduct :product-61 ;
+                 :belongsToOrder ?order .
   }
 }
 ORDER BY ?customer
@@ -29,4 +32,11 @@ WHERE { GRAPH ?graph {
   }
 }
 ORDER BY ?customer
+
+PREFIX        : <http://www.mysparql.com/resource/northwind/>
+PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
+
+# Customers who never placed an order
+
+
 

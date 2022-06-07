@@ -11,9 +11,10 @@ SELECT
   ?contactName
 WHERE { 
   GRAPH kggraph:dataGraph {
-    ?customer :boughtProduct :product-61 ;
-              :companyName ?companyName ;
-              :contactName ?contactName .
+    ?customer a :Customer ;
+        :boughtProduct :product-61 ;
+        :companyName ?companyName ;
+        :contactName ?contactName .
   }
 }
 ORDER BY ?customer

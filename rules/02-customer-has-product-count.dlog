@@ -7,9 +7,14 @@ PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 [?customer, :hasProductCount, ?productCount] :-
 AGGREGATE (
+    [?customer, a, :Customer],
+    [?order, a, :Order],
+    [?orderDetail, a, :OrderDetail],
+    [?product, a, :Product],
     [?orderDetail, :hasProduct, ?product],
     [?orderDetail, :belongsToOrder, ?order],
     [?order, :hasCustomer, ?customer] 
     ON ?customer 
     BIND COUNT(?product) AS ?productCount
 ) .
+

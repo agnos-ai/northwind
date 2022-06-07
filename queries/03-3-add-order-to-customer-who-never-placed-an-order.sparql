@@ -1,0 +1,14 @@
+PREFIX        : <http://www.mysparql.com/resource/northwind/>
+PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
+
+# Add an order to a customer who had never placed an order
+
+INSERT DATA {
+    GRAPH kggraph:dataGraph {
+        :order-99999 a :Order .
+        :orderDetail-99999-61 a :OrderDetail ;
+            :hasProduct :product-61 ;
+            :belongsToOrder :order-99999 .
+        :order-99999 :hasCustomer :customer-FISSA ;
+    }
+}

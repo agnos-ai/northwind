@@ -7,6 +7,10 @@ PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 # Shell (with authentication): curl -X POST -G --user admin:admin -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
 
 kggraph:dataGraph(?customer, :boughtProduct, ?product) :-
+    kggraph:dataGraph(?customer, a, :Customer),
+    kggraph:dataGraph(?order, a, :Order),
+    kggraph:dataGraph(?orderDetail, a, :OrderDetail),
+    kggraph:dataGraph(?product, a, :Product),
     kggraph:dataGraph(?orderDetail, :hasProduct, ?product),
     kggraph:dataGraph(?orderDetail, :belongsToOrder, ?order),
     kggraph:dataGraph(?order, :hasCustomer, ?customer) .

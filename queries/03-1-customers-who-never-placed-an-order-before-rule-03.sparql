@@ -19,7 +19,7 @@ WHERE {
         OPTIONAL {?customer :postalCode ?postalCode} .
         OPTIONAL {
             ?order a  :Order .
-            ?customer ^:hasCustomer ?order
+            ?customer ^:hasCustomer ?order .
         } 
         FILTER (!BOUND(?order))
     }
