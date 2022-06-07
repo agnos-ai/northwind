@@ -23,8 +23,8 @@ if [[ -z "$(docker images -a -q | uniq)" ]] ;
 then
     echo "${info}No images to remove${reset}"
   else
-    docker rmi -f $(docker images -a -q | uniq) || exit 1
-    echo "${info}All images have been removed${reset}"
+    docker rmi -f $(docker images -a -q | uniq) 2> /dev/null || true
+    echo "${info}All images not being used have been removed${reset}"
 fi
 
 # Delete ALL Volumes
@@ -35,7 +35,7 @@ if [[ -z "$(docker volume ls -q | uniq)" ]] ;
 then
     echo "${info}No volumes to delete${reset}"
   else
-    docker rmi -f $(docker volume ls -q | uniq)  || exit 1
+    docker rmi -f $(docker volume ls -q | uniq)  2> /dev/null | true
     echo "${info}All volumes have been deleted${reset}" 
 fi
 

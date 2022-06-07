@@ -1,4 +1,4 @@
-FROM oxfordsemantic/rdfox:5.5
+FROM oxfordsemantic/rdfox:5.6
 
 USER root
 RUN apt-get install --yes bash
