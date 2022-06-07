@@ -3,10 +3,16 @@
 
 ## Introduction
 
-This repository will spin a RDFox server with the Northwind data store. 
-You will need to have Docker running on your local machine. Please visit the official Docker website to download and install Docker. 
-For detailed information on the Northwind sample data store, please refer to the following article:
-https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
+This repository will automatically spin a Docker container with an instance of RDFox server containing the Northwind sample database.
+
+
+## Host pre-requisites
+
+The automated installation using Docker only works on MacOS. For Windows, you will need to  install and configure RDFox manually. 
+Please visit the official Docker website to download and install Docker for MacOS. 
+For more details on the Northwind sample data store, please refer to the following article: https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
+
+You must have **Homebrew** and **Curl** installed on the host computer in order to be able to run the exercises in this demo. Please, follow the instructions on this [web site](https://help.ubidots.com/en/articles/2165289-learn-how-to-install-run-curl-on-windows-macosx-linux) to install those tools on Windows, MacOS, and Linux.
 
 
 ## License
@@ -14,15 +20,6 @@ https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
 This Docker container checks for the existence of an RDFox.lic license file in the repository home directory: `/northwind/home/RDFox.lic`. 
 Visit RDFox website to request a trial license and copy it to the location specified above on your local machine.
 
-
-## Host pre-requisites
-
-### MacOS
-
-You must have **Homebrew** and **Curl** installed on the host computer in order to be able to run the exercises in this demo. Please, follow the instructions on this [web site](https://help.ubidots.com/en/articles/2165289-learn-how-to-install-run-curl-on-windows-macosx-linux) to install those tools on Windows, MacOS, and Linux.
-
-### Windows
-TODO
 
 ## Running the container
 
@@ -54,6 +51,5 @@ The command to add the rule can be found inside each rule dlog file.
 This following command will stop and remove all containers, remove all images, and delete all Volumes. 
 
 `./local-cleanup.sh`
-
 
 TODO: Document queries, rules and diagrams here
