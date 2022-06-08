@@ -3,16 +3,30 @@ PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 # WARNING!!! This rule answers if a customer bought a product, but not how many times.
 # To add this rule, execute the following command in the terminal:
+
+# Sandbox (no authentication): curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/graph/dataGraph" -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
+# Shell (with authentication): curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/graph/dataGraph" --user admin:admin -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
+
+[?customer, :boughtProduct, ?product] :-
+    [?customer, a, :Customer],
+    [?order, a, :Order],
+    [?orderDetail, a, :OrderDetail],
+    [?product, a, :Product],
+    [?orderDetail, :hasProduct, ?product],
+    [?orderDetail, :belongsToOrder, ?order],
+    [?order, :hasCustomer, ?customer] .
+
+
+# The graph where the rule should be created can be defined inside the rule itself, as per example below.
+# This way there is no need to pass the graph in the curl command.
 # Sandbox (no authentication): curl -X POST -G -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
 # Shell (with authentication): curl -X POST -G --user admin:admin -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
 
-kggraph:dataGraph(?customer, :boughtProduct, ?product) :-
-    kggraph:dataGraph(?customer, a, :Customer),
-    kggraph:dataGraph(?order, a, :Order),
-    kggraph:dataGraph(?orderDetail, a, :OrderDetail),
-    kggraph:dataGraph(?product, a, :Product),
-    kggraph:dataGraph(?orderDetail, :hasProduct, ?product),
-    kggraph:dataGraph(?orderDetail, :belongsToOrder, ?order),
-    kggraph:dataGraph(?order, :hasCustomer, ?customer) .
-
-
+#kggraph:dataGraph(?customer, :boughtProduct, ?product) :-
+#    kggraph:dataGraph(?customer, a, :Customer),
+#    kggraph:dataGraph(?order, a, :Order),
+#    kggraph:dataGraph(?orderDetail, a, :OrderDetail),
+#    kggraph:dataGraph(?product, a, :Product),
+#    kggraph:dataGraph(?orderDetail, :hasProduct, ?product),
+#    kggraph:dataGraph(?orderDetail, :belongsToOrder, ?order),
+#    kggraph:dataGraph(?order, :hasCustomer, ?customer) .
