@@ -5,10 +5,10 @@ PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
 INSERT DATA {
     GRAPH kggraph:dataGraph {
-        :order-99999 a :Order .
+        :order-99999 a :Order ;
+                     :hasCustomer :customer-FISSA .
         :orderDetail-99999-61 a :OrderDetail ;
                               :hasProduct :product-61 ;
                               :belongsToOrder :order-99999 .
-        :order-99999 :hasCustomer :customer-FISSA ;
     }
 }
