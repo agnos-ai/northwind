@@ -23,20 +23,18 @@ ORDER BY ?customer
 
 
 # The following is the property path version of the query above
+
 PREFIX        : <http://www.mysparql.com/resource/northwind/>
 PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
-SELECT DISTINCT ?customer 
-WHERE { GRAPH ?graph {
-    ?customer ^:hasCustomer/^:belongsToOrder/:hasProduct :product-61 .
-  }
+SELECT DISTINCT
+    ?customer
+WHERE {
+    GRAPH ?graph {
+        ?customer ^:hasCustomer/^:belongsToOrder/:hasProduct :product-61 .
+    }
 }
 ORDER BY ?customer
-
-PREFIX        : <http://www.mysparql.com/resource/northwind/>
-PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
-
-# Customers who never placed an order
 
 
 

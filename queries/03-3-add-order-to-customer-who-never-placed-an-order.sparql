@@ -1,7 +1,7 @@
 PREFIX        : <http://www.mysparql.com/resource/northwind/>
 PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
 
-# Add an order to a customer who had never placed an order
+# Add an order to a customer who had never placed an order before
 
 INSERT DATA {
     GRAPH kggraph:dataGraph {
