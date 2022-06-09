@@ -12,3 +12,20 @@ INSERT DATA {
                               :belongsToOrder :order-99999 .
     }
 }
+
+
+
+#PREFIX        : <http://www.mysparql.com/resource/northwind/>
+#PREFIX kggraph: <http://www.mysparql.com/resource/northwind/graph/>
+#
+## Undo the insert above
+#
+#DELETE WHERE {
+#    GRAPH kggraph:dataGraph {
+#        :order-99999 a :Order ;
+#            :hasCustomer :customer-FISSA .
+#        :orderDetail-99999-61 a :OrderDetail ;
+#            :hasProduct :product-61 ;
+#            :belongsToOrder :order-99999 .
+#    }
+#}

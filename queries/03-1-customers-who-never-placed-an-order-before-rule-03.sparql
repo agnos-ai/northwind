@@ -29,6 +29,10 @@ ORDER BY ?customer
 
 # Customers who never placed an order (MINUS vs FILTER NOT EXISTS)
 
+# NOT EXISTS and MINUS represent two ways of thinking about negation, one based on testing whether a pattern exists in the data,
+# given the bindings already determined by the query pattern, and one based on removing matches based on the evaluation of two
+# patterns. In some cases they can produce different answers.
+
 # MINUS: Removes matches based on the evaluation of two separate basic graph patterns (BGP). It subtracts results. 
 # FILTER NOT EXISTS: Evaluates the two basic graph patterns (BGP) as one solution.
 # Therefore, in the example below, if we change the "?customer" shared variable in the second BGP to "?s" we get the 
