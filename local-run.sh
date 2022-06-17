@@ -13,8 +13,8 @@ help()
    echo   "   Starts an RDFox container with the Northwind sample data store."
    echo 
    echo   "Options:"
-#   echo   "   -u  User."
-#   echo   "   -p  Password."
+   echo   "   -u  User."
+   echo   "   -p  Password."
    echo   "   -r  HTTP port number."
    echo   "   -t  Repository type: par-simple-nn, par-simple-nw, par-simple-ww, par-complex-nn, par-complex-nw, par-complex-ww. Refer to the RDFox documentation for more details."
    echo   "   -h  Help."
@@ -65,8 +65,8 @@ if [[ -z "${user}" ]] || [[ -z "${password}" ]] ; then
   help
 fi
 
-#echo "user: "$user
-#echo "password: "$password
+echo "user: "$user
+echo "password: "$password
 echo "port: "$port
 echo "repositorytype: "$repositorytype
 echo "Parameter validation complete. "
