@@ -13,8 +13,8 @@ help()
    echo   "   Starts an RDFox container with the Northwind sample data store."
    echo 
    echo   "Options:"
-   echo   "   -u  User."
-   echo   "   -p  Password."
+#   echo   "   -u  User."
+#   echo   "   -p  Password."
    echo   "   -r  HTTP port number."
    echo   "   -t  Repository type: par-simple-nn, par-simple-nw, par-simple-ww, par-complex-nn, par-complex-nw, par-complex-ww. Refer to the RDFox documentation for more details."
    echo   "   -h  Help."
@@ -65,8 +65,8 @@ if [[ -z "${user}" ]] || [[ -z "${password}" ]] ; then
   help
 fi
 
-echo "user: "$user
-echo "password: "$password
+#echo "user: "$user
+#echo "password: "$password
 echo "port: "$port
 echo "repositorytype: "$repositorytype
 echo "Parameter validation complete. "
@@ -108,22 +108,29 @@ chmod -R u+rwx ./
 
 # Import Northwind data into the dataGraph
 curl -X POST -G \
---data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/dataGraph" \
+--data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/graph/dataGraph" \
 --user "${user}":"${password}" "localhost:${port}/datastores/Northwind/content" -H "Content-Type:" -T "data/northwind.nt"
+
+
+
+# TODO: Create Rules
+
 
 
 # TODO: Create a Northwind Ontology
 # Import Northwind Ontology
 # curl -X POST -G \
 # --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/ontology" \
-# --user "${user}":"${password}" -H "Content-Type:text/turtle" -T "ontology/univ-bench.ttl" \
+# --user "${user}":"${password}" -H "Content-Type:text/turtle" -T "ontology/northwind-ontology.ttl" \
 # "localhost:${port}/datastores/Northwind/content" 
+
 
 
 # TODO: Create Axioms
 # Axioms
 # curl PATCH --user "${user}":"${password}" -H "Content-Type:" "localhost:${port}/datastores/Northwind/content?operation=add-axioms&source-graph-name=dataGraph&destination-graph-name=axiomGraph"
 # curl PATCH --user "admin":"admin" "localhost:12110/datastores/Northwind/content?operation=add-axioms&source-graph-name=#data&destination-graph-name=axiomGraph"
+
 
 
 echo "${header}List data stores created${reset}"

@@ -8,9 +8,14 @@ This repository will automatically spin a Docker container with an instance of R
 
 ## Host pre-requisites
 
-The automated installation using Docker only works on MacOS. For Windows, you will need to  install and configure RDFox manually. 
+The automated installation using Docker only works on MacOS. For Windows, you will need to  install and configure RDFox manually. It hasn't been tested on Linux, but it could probably work.
 Please visit the official Docker website to download and install Docker for MacOS. 
-For more details on the Northwind sample data store, please refer to the following article: https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
+
+For more details on the Northwind sample data store, please refer to the following article: 
+https://medium.com/agnos-ai/northwind-sql-vs-sparql-de662f2e0e7b
+
+For more details on RDFox reasoning, queries and rules in this repo, please refer to the following article: https://medium.com/agnos-ai/reasoning-with-northwind-16cf3edf3a67
+
 
 You must have **Homebrew** and **Curl** installed on the host computer in order to be able to run the exercises in this demo. Please, follow the instructions on this [web site](https://help.ubidots.com/en/articles/2165289-learn-how-to-install-run-curl-on-windows-macosx-linux) to install those tools on Windows, MacOS, and Linux.
 
