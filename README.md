@@ -53,8 +53,18 @@ Queries and rules can be found under their respective folders in this repository
 The command to add the rule can be found inside each rule dlog file.
 
 ## Cleaning up the local environment
-This following command will stop and remove all containers, remove all images, and delete all Volumes. 
+WARNING! 
+
+The following command will stop and remove all existing containers, images, and volumes on the user's machine.
+If you have any other Docker containers in addition to the RDFox ones created by this demonstration, they will be removed, too. 
 
 `./local-cleanup.sh`
 
-TODO: Document queries, rules and diagrams here
+
+## Articles
+
+The articles that use this repository are:
+
+https://medium.com/agnos-ai/reasoning-with-northwind-16cf3edf3a67
+
+
