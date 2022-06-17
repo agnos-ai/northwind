@@ -102,7 +102,7 @@ while [ ${test} != 0 ]; do
 done
 
 
-# Grant full access to all downloaded data files and ontologies, rules and queries.
+# Grant full access to all downloaded data files and ontologies, rules and queries.curl -X POST -G --data-urlencode "default-graph-name=http://www.mysparql.com/resource/northwind/graph/dataGraph" -H "Content-Type:" -T "rules/01-customer-bought-product.dlog" "localhost:12110/datastores/Northwind/content"
 chmod -R u+rwx ./
 
 
